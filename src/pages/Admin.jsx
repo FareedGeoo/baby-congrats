@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Check,
+  Download,
   Heart,
   Image as ImageIcon,
   ImageOff,
@@ -18,13 +19,15 @@ import { LanguageSwitcher } from '../components/LanguageSwitcher.jsx';
 import { Lightbox } from '../components/Lightbox.jsx';
 import { PaperCard, ScrapbookLabel } from '../components/ScrapbookComponents.jsx';
 import { AdminPhotos } from '../components/admin/AdminPhotos.jsx';
+import { AdminExports } from '../components/admin/AdminExports.jsx';
 import { AdminSettings } from '../components/admin/AdminSettings.jsx';
 import { useI18n } from '../i18n/index.js';
+import { fetchAllMessages } from '../utils/fetchAllMessages.js';
 import { formatRelativeDate } from '../utils/formatDate.js';
 import { SITE_SETTINGS_COLUMNS } from '../utils/siteSettings.js';
 import { getStoragePath, isMissingStorageObject } from '../utils/storage.js';
 
-const ADMIN_TABS = ['pending', 'approved', 'all', 'photos', 'settings'];
+const ADMIN_TABS = ['pending', 'approved', 'all', 'photos', 'exports', 'settings'];
 const MESSAGE_TABS = ['pending', 'approved', 'all'];
 const RECIPIENT_FILTERS = ['all', 'baby', 'parents'];
 const PHOTO_BUCKET = 'baby-photos';
@@ -250,13 +253,9 @@ export function Admin() {
       setLoadingMessages(true);
       setLoadErrorKey('');
       try {
-        const { data, error } = await supabase
-          .from('messages')
-          .select('*')
-          .order('created_at', { ascending: false });
-        if (error) throw error;
+        const allMessages = await fetchAllMessages();
         if (!active) return;
-        const mergedMessages = pendingEvents.reduce(applyRealtimeEvent, data || []);
+        const mergedMessages = pendingEvents.reduce(applyRealtimeEvent, allMessages);
         pendingEvents.length = 0;
         initialLoadComplete = true;
         setMessages(mergedMessages);
@@ -306,7 +305,7 @@ export function Admin() {
   useEffect(() => {
     if (
       adminState !== 'authorized'
-      || !['photos', 'settings'].includes(activeTab)
+      || !['photos', 'exports', 'settings'].includes(activeTab)
       || siteSettings
     ) return undefined;
 
@@ -514,6 +513,12 @@ export function Admin() {
       return;
     }
 
+    function retrySettingsLoad() {
+      setSiteSettings(null);
+      setSettingsStatus('idle');
+      setSettingsRetryCount((count) => count + 1);
+    }
+
     setAdminState('loading');
     try {
       const { data, error } = await supabase.auth.getSession();
@@ -709,6 +714,7 @@ export function Admin() {
     approved: t('admin.approvedTab'),
     all: t('admin.allTab'),
     photos: t('admin.photosTab'),
+    exports: t('admin.exportTab'),
     settings: t('admin.settingsTab'),
   };
   return (
@@ -774,6 +780,7 @@ export function Admin() {
                   onKeyDown={(event) => handleTabKeyDown(event, index)}
                 >
                   {tab === 'photos' && <ImageIcon size={16} aria-hidden="true" />}
+                  {tab === 'exports' && <Download size={16} aria-hidden="true" />}
                   {tab === 'settings' && <SettingsIcon size={16} aria-hidden="true" />}
                   {tabLabels[tab]}
                   {tab === 'pending' && (
@@ -833,15 +840,44 @@ export function Admin() {
             aria-labelledby={`admin-tab-${activeTab}`}
             tabIndex={0}
           >
-            {activeTab === 'settings' ? (
+            {activeTab === 'exports' ? (
+              loadingMessages ? (
+                <div className="admin-loading" role="status" aria-live="polite">
+                  <Loader2 className="admin-access-spinner" aria-hidden="true" />
+                  <span>{t('admin.loading')}</span>
+                </div>
+              ) : loadErrorKey ? (
+                <div className="admin-list-error" role="alert" aria-live="polite">
+                  <p>{t(loadErrorKey)}</p>
+                  <button type="button" className="btn-outline" onClick={() => retryMessagesRef.current?.()}>
+                    {t('admin.retryLoad')}
+                  </button>
+                </div>
+              ) : settingsStatus === 'error' ? (
+                <div className="admin-list-error" role="alert" aria-live="polite">
+                  <p>{t(settingsErrorKey || 'admin.settingsLoadError')}</p>
+                  <button type="button" className="btn-outline" onClick={retrySettingsLoad}>
+                    {t('admin.retryLoad')}
+                  </button>
+                </div>
+              ) : settingsStatus !== 'ready' || !siteSettings ? (
+                <div className="admin-loading" role="status" aria-live="polite">
+                  <Loader2 className="admin-access-spinner" aria-hidden="true" />
+                  <span>{t('admin.settingsLoading')}</span>
+                </div>
+              ) : (
+                <AdminExports
+                  messages={messages}
+                  babyName={siteSettings.baby_name}
+                  featuredPhotoUrl={siteSettings.baby_photo_url}
+                  themeName={siteSettings.theme}
+                />
+              )
+            ) : activeTab === 'settings' ? (
               settingsStatus === 'error' ? (
                 <div className="admin-list-error" role="alert" aria-live="polite">
                   <p>{t(settingsErrorKey || 'admin.settingsLoadError')}</p>
-                  <button type="button" className="btn-outline" onClick={() => {
-                    setSiteSettings(null);
-                    setSettingsStatus('idle');
-                    setSettingsRetryCount((count) => count + 1);
-                  }}>
+                  <button type="button" className="btn-outline" onClick={retrySettingsLoad}>
                     {t('admin.retryLoad')}
                   </button>
                 </div>
@@ -875,11 +911,7 @@ export function Admin() {
               ) : settingsStatus === 'error' ? (
                 <div className="admin-list-error" role="alert" aria-live="polite">
                   <p>{t(settingsErrorKey || 'admin.settingsLoadError')}</p>
-                  <button type="button" className="btn-outline" onClick={() => {
-                    setSiteSettings(null);
-                    setSettingsStatus('idle');
-                    setSettingsRetryCount((count) => count + 1);
-                  }}>
+                  <button type="button" className="btn-outline" onClick={retrySettingsLoad}>
                     {t('admin.retryLoad')}
                   </button>
                 </div>

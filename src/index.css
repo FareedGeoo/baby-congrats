@@ -2978,6 +2978,349 @@
     width: 100%;
   }
 
+  .admin-export-tools {
+    display: grid;
+    min-width: 0;
+    gap: 1rem;
+  }
+
+  .admin-export-heading {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .admin-export-heading h2,
+  .admin-export-card h3 {
+    margin: 0;
+    color: rgb(var(--theme-text));
+    font-family: 'Fraunces', Georgia, serif;
+  }
+
+  .admin-export-heading h2 {
+    font-size: clamp(1.35rem, 3vw, 1.8rem);
+  }
+
+  .admin-export-heading p,
+  .admin-export-card p {
+    margin: 0;
+    color: rgb(var(--theme-text-secondary));
+    line-height: 1.55;
+  }
+
+  .admin-export-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+
+  .admin-export-card {
+    display: grid;
+    min-width: 0;
+    align-content: start;
+    justify-items: start;
+    gap: 0.75rem;
+    padding-block: 1.2rem;
+    padding-inline: 1rem;
+  }
+
+  .admin-export-card h3 {
+    font-size: 1.15rem;
+    line-height: 1.3;
+  }
+
+  .admin-export-action {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-block-start: 0.25rem;
+    text-decoration: none;
+  }
+
+  .admin-export-action:focus-visible,
+  .admin-print-toolbar a:focus-visible,
+  .admin-print-toolbar button:focus-visible,
+  .admin-print-pending-toggle input:focus-visible {
+    outline: 2px solid rgb(var(--theme-accent-text));
+    outline-offset: 3px;
+  }
+
+  .admin-zip-progress,
+  .admin-zip-result {
+    display: grid;
+    min-width: 0;
+    gap: 0.55rem;
+    padding-block: 0.9rem;
+    padding-inline: 1rem;
+    border: 1px solid rgb(var(--theme-border));
+    border-radius: 0.8rem;
+    background: rgb(var(--theme-card-bg));
+    color: rgb(var(--theme-text));
+  }
+
+  .admin-zip-progress p,
+  .admin-zip-result p {
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .admin-zip-progress progress {
+    width: 100%;
+    height: 0.8rem;
+    accent-color: rgb(var(--theme-accent-text));
+  }
+
+  .admin-zip-result.is-success {
+    border-color: #347347;
+    background: #f0f8f0;
+    color: #234f2e;
+  }
+
+  .admin-zip-result.is-error {
+    border-color: #8a2626;
+    background: #fff5f3;
+    color: #702020;
+  }
+
+  .admin-zip-result h4 {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+  .admin-zip-result ul {
+    display: grid;
+    gap: 0.25rem;
+    margin-block: 0.35rem 0;
+    padding-inline-start: 1.3rem;
+  }
+
+.admin-print-page {
+    min-height: 100vh;
+    padding-block: 1rem 3rem;
+    padding-inline: clamp(0.75rem, 3vw, 2rem);
+  }
+
+  .admin-print-toolbar {
+    display: flex;
+    max-width: 68rem;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-inline: auto;
+    margin-block-end: 1.5rem;
+    padding-block-end: 1rem;
+    border-block-end: 1px solid rgb(var(--theme-border));
+  }
+
+  .admin-print-toolbar > a,
+  .admin-print-toolbar > button {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    text-decoration: none;
+  }
+
+  .admin-print-pending-toggle {
+    display: flex;
+    min-height: 2.75rem;
+    align-items: center;
+    gap: 0.55rem;
+    margin-inline-end: auto;
+    color: rgb(var(--theme-text));
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  .admin-print-pending-toggle input {
+    width: 1.2rem;
+    height: 1.2rem;
+    flex: 0 0 auto;
+    accent-color: rgb(var(--theme-accent-text));
+  }
+
+  .admin-print-document {
+    display: grid;
+    width: min(100%, 68rem);
+    gap: 1.5rem;
+    margin-inline: auto;
+  }
+
+  .admin-print-cover {
+    display: grid;
+    justify-items: center;
+    gap: 0.75rem;
+    padding-block: clamp(1.5rem, 6vw, 3.5rem);
+    padding-inline: clamp(1rem, 4vw, 2.5rem);
+    border: 1px solid rgb(var(--theme-border));
+    border-radius: 1rem;
+    background: rgb(var(--theme-card-bg));
+    text-align: center;
+  }
+
+  .admin-print-kicker,
+  .admin-print-subtitle {
+    margin: 0;
+    color: rgb(var(--theme-text-secondary));
+  }
+
+  .admin-print-kicker {
+    color: rgb(var(--theme-accent-text));
+    font-family: var(--handwritten-font);
+    font-size: 1.2rem;
+  }
+
+  .admin-print-cover h1 {
+    margin: 0;
+    color: rgb(var(--theme-text));
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: clamp(2.2rem, 8vw, 4.5rem);
+    line-height: 1.08;
+    overflow-wrap: anywhere;
+  }
+
+  .admin-print-subtitle {
+    max-width: 38rem;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .admin-print-featured {
+    width: min(100%, 21rem);
+    margin-block-start: 0.6rem;
+  }
+
+  .admin-print-featured .polaroid-frame {
+    margin: 0;
+  }
+
+  .admin-print-section-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-block-end: 0.8rem;
+  }
+
+  .admin-print-section-heading h2 {
+    margin: 0;
+    color: rgb(var(--theme-text));
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: clamp(1.4rem, 4vw, 2rem);
+  }
+
+  .admin-print-section-heading p {
+    margin: 0;
+    color: rgb(var(--theme-text-secondary));
+    font-size: 0.9rem;
+  }
+
+  .admin-print-message-list {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .admin-print-message {
+    display: grid;
+    min-width: 0;
+    gap: 0.9rem;
+    padding-block: 1rem;
+    padding-inline: 1rem;
+  }
+
+  .admin-print-message-content {
+    display: grid;
+    min-width: 0;
+    align-content: start;
+    gap: 0.7rem;
+  }
+
+  .admin-print-message-header {
+    display: flex;
+    min-width: 0;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .admin-print-message-header h3 {
+    min-width: 0;
+    margin: 0;
+    color: rgb(var(--theme-text));
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 1.15rem;
+    overflow-wrap: anywhere;
+  }
+
+  .admin-print-message-status {
+    color: rgb(var(--theme-text-secondary));
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .admin-print-message-text {
+    margin: 0;
+    color: rgb(var(--theme-text));
+    font-size: 1rem;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+  }
+
+  .admin-print-message-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+    color: rgb(var(--theme-text-secondary));
+    font-size: 0.82rem;
+  }
+
+  .admin-print-message-photo {
+    width: min(100%, 17rem);
+    justify-self: center;
+  }
+
+  .admin-print-message-photo .polaroid-frame {
+    margin: 0;
+  }
+
+  .admin-print-photo-error,
+  .admin-print-empty > p {
+    margin: 0;
+    color: rgb(var(--theme-text-secondary));
+    line-height: 1.5;
+  }
+
+  .admin-print-state {
+    display: grid;
+    justify-items: center;
+    gap: 0.8rem;
+  }
+
+  .admin-print-access-link {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+  }
+
+  [lang='ar'] .admin-export-heading h2,
+  [lang='ar'] .admin-export-card h3,
+  [lang='ar'] .admin-print-cover h1,
+  [lang='ar'] .admin-print-section-heading h2,
+  [lang='ar'] .admin-print-message-header h3 {
+    font-family: 'Cairo', sans-serif;
+  }
+
   [lang='ar'] .admin-access-card h1,
   [lang='ar'] .admin-heading-group h1,
   [lang='ar'] .admin-overview-card strong,
@@ -3030,6 +3373,19 @@
   .admin-photo-gallery {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .admin-export-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-print-message.has-photo {
+    grid-template-columns: minmax(0, 1fr) minmax(10rem, 0.38fr);
+    align-items: start;
+  }
+
+  .admin-print-message-photo {
+    width: 100%;
+  }
 }
 
 @media (min-width: 900px) {
@@ -3062,5 +3418,171 @@
 
   .admin-photo-gallery {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .admin-export-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+ .admin-print-page {
+  page: admin-memory-book;
+}
+
+@page admin-memory-book {
+  margin: 14mm 12mm;
+}
+
+@media print {
+  html:has(.admin-print-page),
+  body:has(.admin-print-page),
+  #root:has(.admin-print-page) {
+    width: auto !important;
+    min-width: 0 !important;
+    background: #fff !important;
+    color: #111 !important;
+  }
+
+  body:has(.admin-print-page) {
+    margin: 0 !important;
+  }
+
+  .skip-link,
+  .admin-print-toolbar,
+  .admin-print-page button,
+  .admin-print-page .scrapbook-tape,
+  .admin-print-page .scrapbook-clip,
+  .admin-print-page .photo-corner,
+  .admin-print-page .scrapbook-sticker,
+  .admin-print-page .polaroid-placeholder svg {
+    display: none !important;
+  }
+
+  .admin-print-page {
+    min-height: 0;
+    padding: 0 !important;
+    background: #fff !important;
+    color: #111 !important;
+  }
+
+  .admin-print-document {
+    width: 100%;
+    gap: 7mm;
+    margin: 0;
+  }
+
+  .admin-print-cover {
+    gap: 3mm;
+    padding: 0 0 5mm;
+    border: 0;
+    border-radius: 0;
+    background: #fff !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .admin-print-cover h1 {
+    color: #111 !important;
+    font-size: 30pt;
+  }
+
+  .admin-print-kicker,
+  .admin-print-subtitle,
+  .admin-print-section-heading p,
+  .admin-print-message-status,
+  .admin-print-message-meta,
+  .admin-print-photo-error {
+    color: #333 !important;
+  }
+
+  .admin-print-featured {
+    width: 55mm;
+    margin-block-start: 2mm;
+  }
+
+  .admin-print-section-heading {
+    margin-block-end: 3mm;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .admin-print-section-heading h2,
+  .admin-print-message-header h3 {
+    color: #111 !important;
+  }
+
+  .admin-print-message-list {
+    display: block;
+  }
+
+  .admin-print-page .paper-card {
+    border: 1px solid #d5d0c8 !important;
+    border-radius: 2mm;
+    background: #fff !important;
+    box-shadow: none !important;
+    color: #111 !important;
+  }
+
+  .admin-print-message {
+    display: block;
+    margin-block-end: 4mm;
+    padding: 4mm;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .admin-print-message.has-photo {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 38mm;
+    align-items: start;
+    gap: 4mm;
+  }
+
+  .admin-print-message-content {
+    gap: 2mm;
+  }
+
+  .admin-print-message-text {
+    color: #111 !important;
+    font-size: 10.5pt;
+    line-height: 1.5;
+  }
+
+  .admin-print-message-photo {
+    width: 38mm;
+  }
+
+  .admin-print-page .polaroid-frame {
+    width: 100%;
+    padding: 1.5mm;
+    transform: none !important;
+    border: 1px solid #ddd;
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+
+  .admin-print-page .polaroid-image {
+    background: #fff !important;
+  }
+
+  .admin-print-page .polaroid-frame img {
+    display: block;
+    width: 100%;
+    max-height: 45mm;
+    object-fit: contain;
+  }
+
+  .admin-print-page .polaroid-caption {
+    color: #222 !important;
+  }
+
+  .admin-print-empty {
+    padding: 4mm;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .admin-print-empty > p {
+    color: #222 !important;
   }
 }
