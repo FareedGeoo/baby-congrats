@@ -1,8 +1,6 @@
-import { lazy, Suspense, useState, useEffect } from 'react';
+import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Home } from './pages/Home.jsx';
-import { DesignPreview } from './pages/DesignPreview.jsx';
-import { supabase } from './lib/supabase.js';
 import { I18nProvider, useI18n } from './i18n/index.js';
 
 const AdminPrint = lazy(() => import('./pages/AdminPrint.jsx').then((module) => ({
@@ -57,7 +55,6 @@ function AppRoutes() {
             </Suspense>
           )}
         />
-        <Route path="/design-preview" element={<DesignPreview />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
@@ -65,22 +62,6 @@ function AppRoutes() {
 }
 
 function App() {
-  const [session, setSession] = useState(null);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, []);
-
   return (
     <I18nProvider>
       <BrowserRouter>

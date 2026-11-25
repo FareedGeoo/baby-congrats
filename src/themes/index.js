@@ -82,7 +82,6 @@ export const themes = {
   }),
 };
 
-export const themeList = Object.values(themes);
 export const DEFAULT_THEME = 'boy';
 
 export function isTheme(value) {

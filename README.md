@@ -1,147 +1,120 @@
-# Baby Congratulations
+# Baby Memory Book
 
-A baby congratulations website where friends and family can leave messages and photos for new parents.
-
-**Stack:** React (Vite) + Tailwind CSS + Supabase (database + storage), deployed on Vercel.
-
----
+A bilingual family guestbook for welcoming a new baby and saving messages and
+photos from friends and family. Built with React, Vite, Supabase, and Tailwind
+CSS; designed for deployment on Vercel.
 
 ## Features
 
-1. **Theme switch** – "Baby Boy" (soft blues, stars, clouds) and "Baby Girl" (soft pinks, hearts, flowers). Toggle in the header, remembered in `localStorage`. URL param `?theme=boy` or `?theme=girl` overrides.
-2. **Hero section** – Baby name, birth date, welcome message. All editable in `src/config.js`.
-3. **Guestbook form** – Name, message, optional photo (jpg/png/webp, max 5MB, client-side compressed). Thank-you confirmation after submit.
-4. **Wall of congratulations** – Card grid of messages with photos, newest first, lightbox for full-size photos. Realtime updates via Supabase.
-5. **Admin page** at `/admin` – Supabase email/password auth. Approve or delete messages. New messages are hidden until approved.
-6. **Responsive, mobile-first, accessible** – Alt text, labels, contrast, gentle animations.
+- Three scrapbook themes: boy, girl, and royal.
+- English and Arabic interface with saved language choice and right-to-left
+  Arabic layout.
+- Public memory wall with pinned and approved messages, recipient filters,
+  photo lightbox, and guestbook submission.
+- Admin tools for moderation, site settings, photo gallery, and memory exports
+  (print, CSV, and ZIP).
+- Browser-side photo compression, accessible forms and dialogs, and responsive
+  layouts.
 
----
+## Requirements
 
-## Project Structure
+- Node.js 20.19+ or 22.12+.
+- A Supabase project.
+- A Vercel account for deployment.
 
-```
-supabase/schema.sql   # Database schema, RLS policies, storage bucket
-.env.example          # Supabase env var template (copy to .env)
-.gitignore            # Excludes .env, node_modules, dist, .vercel
-vercel.json           # SPA rewrite for /admin on refresh
-vite.config.js        # Vite config
-tailwind.config.js    # Tailwind config with theme colors
-postcss.config.js     # Tailwind + Autoprefixer
-src/
-  config.js           # Editable baby name, birth date, welcome message
-  main.jsx            # React entry point
-  App.jsx             # Routing (/, /admin)
-  index.css           # Tailwind directives + theme CSS variables
-  lib/supabase.js     # Supabase client singleton
-  hooks/useTheme.js   # localStorage + URL param theme sync
-  hooks/useMessages.js# Fetch + Supabase realtime subscription
-  components/         # ThemeToggle, Header, Hero, GuestbookForm, MessageCard, MessageGrid, Lightbox, ProtectedRoute
-  pages/              # Home, Admin
-  utils/              # compressImage, formatDate
-```
-
----
-
-## Prerequisites
-
-- Node.js (v18+)
-- A [Supabase](https://supabase.com) account and project
-- A [Vercel](https://vercel.com) account (for deployment)
-
----
-
-## Step 1: Set up Supabase
-
-1. Create a new project in [Supabase](https://app.supabase.com).
-2. Go to **SQL Editor** and paste the entire contents of `supabase/schema.sql`, then run it.
-   - This creates the `messages` table, enables RLS, creates the `baby-photos` public storage bucket, and sets all policies.
-3. Go to **Authentication > Users** and create an admin user (email + password). You'll sign in with this at `/admin`.
-4. Go to **Authentication > Settings** and make sure **Email Confirmation** is disabled (or confirm the admin email manually), otherwise sign-in won't work.
-5. Go to **API** and copy your **Project URL** and **anon public key**.
-
----
-
-## Step 2: Set up locally
+## Local setup
 
 1. Install dependencies:
 
-   ```bash
+   ```sh
    npm install
    ```
 
-2. Copy the env example and fill in your Supabase credentials:
+2. Copy `.env.example` to `.env` (`Copy-Item .env.example .env` in
+   PowerShell), then set the Supabase project URL and anon/public key:
 
-   ```bash
-   cp .env.example .env
+   ```dotenv
+   VITE_SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
+   VITE_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
    ```
 
-   Edit `.env`:
+   These are placeholders only. Use your own project values locally and in
+   Vercel. Never put a Supabase `service_role` key in this frontend.
 
-   ```
-   VITE_SUPABASE_URL=https://your-project-ref.supabase.co
-   VITE_SUPABASE_ANON_KEY=your-anon-public-key
-   ```
+3. Start the development server:
 
-3. Start the dev server:
-
-   ```bash
+   ```sh
    npm run dev
    ```
 
-   Open http://localhost:5173. Visit `/admin` and sign in with the admin user you created.
+   Open the URL printed by Vite (normally `http://localhost:5173`).
 
----
+4. Verify a production build:
 
-## Step 3: Customize
+   ```sh
+   npm run build
+   npm run preview
+   ```
 
-Edit `src/config.js` to set the baby's name, birth date, and welcome message:
+## Supabase setup
 
-```js
-export const BABY_NAME = 'Emma';
-export const BIRTH_DATE = 'January 15, 2025';
-export const WELCOME_MESSAGE = 'Welcome to the world, little one!';
-```
+1. Create a Supabase project and set the environment variables above.
+2. In the Supabase SQL Editor, run the files in `supabase/migrations/` in
+   numerical order: `001`, `002`, `003`, then `004`. Do not run
+   `supabase/schema.sql` as a migration; it is a reference snapshot of the
+   final schema.
+   - `001_memory_book_data_and_admins.sql`: message fields, admins,
+     authorization helper, and site settings.
+   - `002_access_policies_storage_realtime.sql`: access policies, photo
+     storage rules, and Realtime publication setup.
+   - `003_admin_featured_photo_prefix.sql`: restricts the reserved `baby/`
+     photo prefix to admins.
+   - `004_storage_upload_policy_cleanup.sql`: limits public uploads to allowed
+     image extensions and removes legacy storage policies.
+3. Create the first admin user in **Authentication → Users**. Use a strong
+   password and confirm the account if email confirmation is enabled.
+4. Add that user's UUID to `public.admins` in the SQL Editor, replacing the
+   example email:
 
----
+   ```sql
+   INSERT INTO public.admins (user_id)
+   SELECT id
+   FROM auth.users
+   WHERE lower(email) = lower('admin@example.com')
+   ON CONFLICT (user_id) DO NOTHING;
+   ```
 
-## Step 4: Deploy to Vercel
+   If this inserts no row, verify that the Auth user exists and that the email
+   is correct, then run it again. Admin pages are available at `/admin`.
+5. In **Authentication → URL Configuration**, set the local Site URL to
+   `http://localhost:5173` while developing, and add the local URL to the
+   Redirect URLs allow-list. For deployment, update the Site URL and allow-list
+   as described below.
 
-1. Push your code to a GitHub repository (make sure `.env` is in `.gitignore` — it is by default).
-2. Import the repo in [Vercel](https://vercel.com).
-3. Add the following **Environment Variables** in Vercel project settings:
-   - `VITE_SUPABASE_URL`
-   - `VITE_SUPABASE_ANON_KEY`
-4. Deploy. Vercel will detect Vite and use `vite build` with output directory `dist`.
-5. `vercel.json` includes an SPA rewrite so direct access to `/admin` works on refresh.
+## Vercel deployment
 
----
+1. Push the project to a Git provider and import it into Vercel.
+2. Configure `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in the Vercel
+   project's environment-variable settings for each environment you use.
+3. Use `npm run build` as the build command and `dist` as the output directory.
+   The existing `vercel.json` catch-all rewrite serves the SPA for direct
+   visits and refreshes at `/admin` and `/admin/print`.
+4. After assigning your production domain, open Supabase **Authentication →
+   URL Configuration**:
+   - Set **Site URL** to the canonical production origin, for example
+     `https://your-domain.example`.
+   - Add `http://localhost:5173/**`, your production origin with `/**`, and
+     the Vercel preview origin(s) with `/**` to **Redirect URLs** as needed.
+     Remove preview URLs that should no longer be allowed.
+5. Confirm the production build loads, an admin can sign in, public
+   submissions are moderated, and unauthorized accounts cannot access admin
+   data.
 
-## Environment Variables
+## Privacy
 
-| Variable | Description | Example |
-|---|---|---|
-| `VITE_SUPABASE_URL` | Your Supabase project URL | `https://abcdef.supabase.co` |
-| `VITE_SUPABASE_ANON_KEY` | Your Supabase anon public key | `eyJhbG...` |
-
-Never commit `.env`. Never use a `service_role` key in the frontend.
-
----
-
-## Admin Workflow
-
-1. Visit `/admin` and sign in with the admin email/password created in Supabase.
-2. All messages appear, newest first. Unapproved ones show "Pending".
-3. Click **Approve** to publish a message to the public wall.
-4. Click **Delete** to remove a message (and its photo from storage).
-
----
-
-## Realtime
-
-New approved messages appear on the wall without refreshing, thanks to a Supabase Realtime subscription on the `messages` table.
-
----
-
-## License
-
-MIT
+The site sends `noindex` directives and `public/robots.txt` disallows crawling.
+These are requests to crawlers, not access controls. Approved messages,
+publicly readable photos, and their storage URLs remain public under the
+configured Supabase policies. Do not upload or enter information that should
+not be shared with visitors. Social metadata uses a generic title and
+description and does not include a family name or featured-photo URL.

@@ -7,14 +7,6 @@ export const en = {
     title: 'Baby Memory Book',
     description: 'Welcome the new baby. Share a message or photo for the family to keep.',
   },
-  preview: {
-    title: 'A little book of keepsakes',
-    description: 'One shared scrapbook, with three ways to remember.',
-    kicker: 'Memory book · foundation',
-    themeColor: 'Theme color: {color}',
-    englishSample: 'English scrapbook sample',
-    arabicSample: 'Arabic scrapbook sample',
-  },
   themeToggle: {
     switchToGirl: 'Switch to girl theme',
     switchToBoy: 'Switch to boy theme',
@@ -31,14 +23,6 @@ export const en = {
     boy: 'Boy',
     girl: 'Girl',
     royal: 'Royal',
-  },
-  sample: {
-    label: 'A note to keep',
-    headline: 'Little moments, held close',
-    caption: 'A first little smile',
-    message: 'May your days be full of wonder, warm cuddles, and the kind of joy that stays.',
-    signature: 'With all our love',
-    sticker: 'So loved',
   },
   nav: {
     primary: 'Main navigation',
